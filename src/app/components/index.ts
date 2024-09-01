@@ -1,3 +1,5 @@
 export * from "./AdvocatesTable";
-export * from "./SearchInput";
+export * from "./AdvocatesTableInput";
+export * from "./AdvocatesTableList";
 export * from "./TopBar";
+export * from "./ui";

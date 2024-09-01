@@ -22,7 +22,8 @@
 			"@components": ["./src/app/components"],
 			"@types": ["./src/types"],
 			"@utils": ["./src/app/utils"],
-			"@hooks": ["./src/app/hooks"]
+			"@hooks": ["./src/app/hooks"],
+			"@ui": ["./src/app/components/ui"]
 		}
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
