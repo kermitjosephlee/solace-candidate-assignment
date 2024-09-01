@@ -1,24 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { AdvocateType } from "@types";
+import { TopBar } from "@components";
 
 export default function Home() {
-	const [advocates, setAdvocates] = useState([]);
-	const [filteredAdvocates, setFilteredAdvocates] = useState([]);
+	const [advocates, setAdvocates] = useState<AdvocateType[]>([]);
+	const [filteredAdvocates, setFilteredAdvocates] = useState<AdvocateType[]>(
+		[]
+	);
+
+	const fetchAdvocates = async () => {
+		try {
+			const response = await fetch("/api/advocates");
+			if (!response.ok) {
+				throw new Error(
+					`Network response was not ok \nResponse Status: ${response.status}`
+				);
+			}
+			const jsonResponse = await response.json();
+			setAdvocates(jsonResponse.data);
+			setFilteredAdvocates(jsonResponse.data);
+		} catch (err) {
+			console.log(err);
+		}
+	};
 
 	useEffect(() => {
-		console.log("fetching advocates...");
-		fetch("/api/advocates").then((response) => {
-			response.json().then((jsonResponse) => {
-				setAdvocates(jsonResponse.data);
-				setFilteredAdvocates(jsonResponse.data);
-			});
-		});
-	}, []);
+		fetchAdvocates();
+	}, [setAdvocates, setFilteredAdvocates]);
 
-	console.log({ advocates });
-
-	const onChange = (e) => {
+	const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const searchTerm = e.target.value;
 		const searchTermEl = document.getElementById("search-term");
 
@@ -31,12 +43,12 @@ export default function Home() {
 		console.log("filtering advocates...");
 		const filteredAdvocates = advocates.filter((advocate) => {
 			return (
-				advocate.firstName.includes(searchTerm) ||
-				advocate.lastName.includes(searchTerm) ||
-				advocate.city.includes(searchTerm) ||
-				advocate.degree.includes(searchTerm) ||
+				advocate.firstName === searchTerm ||
+				advocate.lastName === searchTerm ||
+				advocate.city === searchTerm ||
+				advocate.degree === searchTerm ||
 				advocate.specialties.includes(searchTerm) ||
-				advocate.yearsOfExperience.includes(searchTerm)
+				advocate.yearsOfExperience >= parseInt(searchTerm, 10)
 			);
 		});
 
@@ -50,9 +62,7 @@ export default function Home() {
 
 	return (
 		<main style={{ margin: "24px" }}>
-			<h1>Solace Advocates</h1>
-			<br />
-			<br />
+			<TopBar />
 			<div>
 				<p>Search</p>
 				<p>
@@ -76,7 +86,7 @@ export default function Home() {
 					</tr>
 				</thead>
 				<tbody>
-					{filteredAdvocates.map((advocate) => {
+					{filteredAdvocates.map((advocate: AdvocateType) => {
 						return (
 							<tr key={advocate.phoneNumber}>
 								<td>{advocate.firstName}</td>
@@ -84,8 +94,8 @@ export default function Home() {
 								<td>{advocate.city}</td>
 								<td>{advocate.degree}</td>
 								<td>
-									{advocate.specialties.map((s) => (
-										<div key={s}>{s}</div>
+									{advocate.specialties.map((specialty) => (
+										<div key={specialty}>{specialty}</div>
 									))}
 								</td>
 								<td>{advocate.yearsOfExperience}</td>
