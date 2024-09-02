@@ -1,6 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@components";
+
 import { AdvocateType, SpecialtyType } from "@types";
-import cslx from "clsx";
 
 export const columns: ColumnDef<AdvocateType>[] = [
 	{
@@ -26,13 +32,30 @@ export const columns: ColumnDef<AdvocateType>[] = [
 			return (
 				<div className=" flex flex-wrap gap-2">
 					{row.original.specialties.sort().map((specialty: SpecialtyType) => {
+						if (!specialty.subtitle) {
+							return (
+								<div
+									key={specialty.title}
+									className="rounded-full border-2 p-2 cursor-default"
+									style={{ borderColor: specialty.color }}>
+									{specialty.title}
+								</div>
+							);
+						}
+
 						return (
-							<div
-								key={specialty.title}
-								className="rounded-full border-2 p-2"
-								style={{ borderColor: specialty.color }}>
-								{specialty.title}
-							</div>
+							<TooltipProvider key={specialty.title}>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<div
+											className="rounded-full border-2 p-2 cursor-default"
+											style={{ borderColor: specialty.color }}>
+											{specialty.title}
+										</div>
+									</TooltipTrigger>
+									<TooltipContent>{specialty.subtitle}</TooltipContent>
+								</Tooltip>
+							</TooltipProvider>
 						);
 					})}
 				</div>
@@ -42,5 +65,13 @@ export const columns: ColumnDef<AdvocateType>[] = [
 	{
 		accessorKey: "yearsOfExperience",
 		header: "Years of Experience",
+		cell: ({ row }) => {
+			const { yearsOfExperience } = row.original;
+			return (
+				<div className="flex items-center justify-center">
+					{yearsOfExperience}
+				</div>
+			);
+		},
 	},
 ];

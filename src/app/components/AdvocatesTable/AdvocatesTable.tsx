@@ -69,10 +69,16 @@ export function AdvocatesTable() {
 		(isAdvocateLoading || isAdvocateLoadingInitial) && advocates.length === 0;
 
 	const onClickRow = (row: AdvocateType) => {
+		if (!!selectedRow && selectedRow.id === row.id) {
+			setSelectedRow(null);
+			return;
+		}
 		setSelectedRow(row);
 	};
 
-	console.log({ selectedRow });
+	const onCloseDialog = () => {
+		setSelectedRow(null);
+	};
 
 	return (
 		<Dialog open={!!selectedRow}>
@@ -189,10 +195,9 @@ export function AdvocatesTable() {
 					</div>
 				</div>
 			</div>
-			<AdvocateDialog
-				advocate={selectedRow}
-				onCloseDialog={() => setSelectedRow(null)}
-			/>
+			{!!selectedRow && (
+				<AdvocateDialog advocate={selectedRow} onCloseDialog={onCloseDialog} />
+			)}
 		</Dialog>
 	);
 }
