@@ -10,16 +10,16 @@ import { AdvocateType, SpecialtyType } from "@types";
 
 export const columns: ColumnDef<AdvocateType>[] = [
 	{
-		accessorKey: "name",
-		header: "Name",
-		cell: ({ row }) => {
-			const { firstName, lastName, degree } = row.original;
-			return (
-				<>
-					<div>{`${firstName} ${lastName}, ${degree}`}</div>
-				</>
-			);
-		},
+		accessorKey: "lastName",
+		header: "Last Name",
+	},
+	{
+		accessorKey: "firstName",
+		header: "First Name",
+	},
+	{
+		accessorKey: "degree",
+		header: "Degree",
 	},
 	{
 		accessorKey: "city",

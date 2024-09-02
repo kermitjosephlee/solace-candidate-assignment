@@ -3,6 +3,7 @@ import { AdvocateType } from "@/types";
 
 export interface AdvocatesContextType {
 	advocates: AdvocateType[];
+	advocatesLength?: number;
 	fetchAdvocates: (signal: AbortSignal) => Promise<void>;
 	isAdvocateLoading: boolean;
 	isAdvocateLoadingInitial: boolean;
@@ -14,6 +15,7 @@ export const AdvocatesContext = createContext<AdvocatesContextType | undefined>(
 
 export const AdvocatesProvider = ({ children }: { children: ReactNode }) => {
 	const [advocates, setAdvocates] = useState<AdvocateType[]>([]);
+	const [advocatesLength, setAdvocatesLength] = useState<number>(0);
 	const [isAdvocateLoading, setIsAdvocateLoading] = useState<boolean>(false);
 	const [isAdvocateLoadingInitial, setIsAdvocateLoadingInitial] =
 		useState<boolean>(true);
@@ -29,6 +31,7 @@ export const AdvocatesProvider = ({ children }: { children: ReactNode }) => {
 			}
 			const jsonResponse = await response.json();
 			setAdvocates(jsonResponse.data);
+			setAdvocatesLength(jsonResponse.total);
 		} catch (err) {
 			console.log(err);
 		} finally {
@@ -52,6 +55,7 @@ export const AdvocatesProvider = ({ children }: { children: ReactNode }) => {
 		<AdvocatesContext.Provider
 			value={{
 				advocates,
+				advocatesLength,
 				fetchAdvocates,
 				isAdvocateLoading,
 				isAdvocateLoadingInitial,

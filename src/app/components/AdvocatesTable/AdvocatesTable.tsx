@@ -38,12 +38,16 @@ import { AdvocateType } from "@types";
 
 export function AdvocatesTable() {
 	const [sorting, setSorting] = useState<SortingState>([]);
-	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [selectedRow, setSelectedRow] = useState<AdvocateType | null>(null);
+	const [inputValue, setInputValue] = useState<string>("");
 
-	const { advocates, isAdvocateLoading, isAdvocateLoadingInitial } =
-		useAdvocates();
+	const {
+		advocates,
+		isAdvocateLoading,
+		isAdvocateLoadingInitial,
+		advocatesLength,
+	} = useAdvocates();
 
 	const table = useReactTable({
 		data: advocates,
@@ -52,12 +56,11 @@ export function AdvocatesTable() {
 		getFilteredRowModel: getFilteredRowModel(),
 		getPaginationRowModel: getPaginationRowModel(),
 		getSortedRowModel: getSortedRowModel(),
-		onColumnFiltersChange: setColumnFilters,
 		onColumnVisibilityChange: setColumnVisibility,
 		onSortingChange: setSorting,
+		pageCount: 20,
 		state: {
 			sorting,
-			columnFilters,
 			columnVisibility,
 		},
 	});
@@ -80,16 +83,20 @@ export function AdvocatesTable() {
 		setSelectedRow(null);
 	};
 
+	const onChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		setInputValue(value);
+		table.setGlobalFilter(inputValue);
+	};
+
 	return (
 		<Dialog open={!!selectedRow}>
 			<div className="w-full">
 				<div className="flex items-center py-4">
 					<Input
 						placeholder="Search"
-						value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-						onChange={(event) =>
-							table.getColumn("name")?.setFilterValue(event.target.value)
-						}
+						value={inputValue}
+						onChange={onChangeInput}
 						className="max-w-sm"
 					/>
 					<DropdownMenu>
@@ -159,9 +166,7 @@ export function AdvocatesTable() {
 								<TableRow>
 									<TableCell
 										colSpan={columns.length}
-										className="h-24 text-center">
-										No results.
-									</TableCell>
+										className="h-24 text-center"></TableCell>
 								</TableRow>
 							)}
 							{showLoading && (

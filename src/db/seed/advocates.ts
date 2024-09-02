@@ -1,5 +1,6 @@
 import db from "..";
 import { advocates } from "../schema";
+import { faker } from "@faker-js/faker";
 
 const getRandomHexColor = (): string => {
 	const letters = "0123456789ABCDEF";
@@ -9,6 +10,19 @@ const getRandomHexColor = (): string => {
 	}
 	return color;
 };
+
+const getRandomFirstName = () => faker.person.firstName();
+const getRandomLastName = () => faker.person.lastName();
+const getRandomCity = () => faker.location.city();
+
+const getRandomDegree = () => {
+	const degrees = ["MD", "PhD", "MSW"];
+	return degrees[Math.floor(Math.random() * degrees.length)];
+};
+
+const getRandomYearsOfExperience = () => Math.floor(Math.random() * 15);
+const getRandomPhoneNumber = () =>
+	faker.phone.number().toString().replace(/-/g, "");
 
 const specialtiesTitles = [
 	"Attention and Hyperactivity (ADHD)",
@@ -64,6 +78,22 @@ const randomSpecialty = () => {
 	const random2 = Math.floor(Math.random() * (24 - random1)) + random1 + 1;
 
 	return [random1, random2];
+};
+
+const getRandomsAdvocates = (n: number) => {
+	const result = [];
+	for (let i = 0; i < n; i++) {
+		result.push({
+			firstName: getRandomFirstName(),
+			lastName: getRandomLastName(),
+			city: getRandomCity(),
+			degree: getRandomDegree(),
+			yearsOfExperience: getRandomYearsOfExperience(),
+			phoneNumber: getRandomPhoneNumber(),
+			specialties: specialties.slice(...randomSpecialty()),
+		});
+	}
+	return result;
 };
 
 const advocateData = [
@@ -202,6 +232,7 @@ const advocateData = [
 		yearsOfExperience: 3,
 		phoneNumber: 5559872345,
 	},
+	...getRandomsAdvocates(100),
 ];
 
 export { advocateData };

@@ -4,6 +4,7 @@ import { AdvocateType } from "@types";
 
 export const useAdvocates = (): {
 	advocates: AdvocateType[];
+	advocatesLength?: number;
 	isAdvocateLoading: boolean;
 	isAdvocateLoadingInitial: boolean;
 } => {
@@ -12,7 +13,17 @@ export const useAdvocates = (): {
 		throw new Error("useAdvocates must be used within an AdvocatesProvider");
 	}
 
-	const { advocates, isAdvocateLoading, isAdvocateLoadingInitial } = context;
+	const {
+		advocates,
+		isAdvocateLoading,
+		isAdvocateLoadingInitial,
+		advocatesLength,
+	} = context;
 
-	return { advocates, isAdvocateLoading, isAdvocateLoadingInitial };
+	return {
+		advocates,
+		isAdvocateLoading,
+		isAdvocateLoadingInitial,
+		advocatesLength,
+	};
 };
