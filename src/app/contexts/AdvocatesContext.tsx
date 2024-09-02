@@ -3,8 +3,9 @@ import { AdvocateType } from "@/types";
 
 export interface AdvocatesContextType {
 	advocates: AdvocateType[];
-	fetchAdvocates: () => Promise<void>;
+	fetchAdvocates: (signal: AbortSignal) => Promise<void>;
 	isAdvocateLoading: boolean;
+	isAdvocateLoadingInitial: boolean;
 }
 
 export const AdvocatesContext = createContext<AdvocatesContextType | undefined>(
@@ -14,11 +15,13 @@ export const AdvocatesContext = createContext<AdvocatesContextType | undefined>(
 export const AdvocatesProvider = ({ children }: { children: ReactNode }) => {
 	const [advocates, setAdvocates] = useState<AdvocateType[]>([]);
 	const [isAdvocateLoading, setIsAdvocateLoading] = useState<boolean>(false);
+	const [isAdvocateLoadingInitial, setIsAdvocateLoadingInitial] =
+		useState<boolean>(true);
 
-	const fetchAdvocates = async () => {
+	const fetchAdvocates = async (signal: AbortSignal) => {
 		setIsAdvocateLoading(true);
 		try {
-			const response = await fetch("/api/advocates");
+			const response = await fetch("/api/advocates", { signal });
 			if (!response.ok) {
 				throw new Error(
 					`Network response was not ok \nResponse Status: ${response.status}`
@@ -30,16 +33,29 @@ export const AdvocatesProvider = ({ children }: { children: ReactNode }) => {
 			console.log(err);
 		} finally {
 			setIsAdvocateLoading(false);
+			setIsAdvocateLoadingInitial(false);
 		}
 	};
 
 	useEffect(() => {
-		fetchAdvocates();
+		const controller = new AbortController();
+		const { signal } = controller;
+
+		fetchAdvocates(signal);
+
+		return () => {
+			controller.abort();
+		};
 	}, []);
 
 	return (
 		<AdvocatesContext.Provider
-			value={{ advocates, fetchAdvocates, isAdvocateLoading }}>
+			value={{
+				advocates,
+				fetchAdvocates,
+				isAdvocateLoading,
+				isAdvocateLoadingInitial,
+			}}>
 			{children}
 		</AdvocatesContext.Provider>
 	);

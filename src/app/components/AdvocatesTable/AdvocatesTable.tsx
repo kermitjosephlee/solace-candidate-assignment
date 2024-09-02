@@ -37,9 +37,9 @@ export function AdvocatesTable() {
 	const [sorting, setSorting] = useState<SortingState>([]);
 	const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-	const [rowSelection, setRowSelection] = useState({});
 
-	const { advocates, isAdvocateLoading } = useAdvocates();
+	const { advocates, isAdvocateLoading, isAdvocateLoadingInitial } =
+		useAdvocates();
 
 	const table = useReactTable({
 		data: advocates,
@@ -50,15 +50,26 @@ export function AdvocatesTable() {
 		getSortedRowModel: getSortedRowModel(),
 		onColumnFiltersChange: setColumnFilters,
 		onColumnVisibilityChange: setColumnVisibility,
-		onRowSelectionChange: setRowSelection,
 		onSortingChange: setSorting,
 		state: {
 			sorting,
 			columnFilters,
 			columnVisibility,
-			rowSelection,
 		},
 	});
+
+	console.log({
+		table,
+		isAdvocateLoading,
+		advocates,
+		isAdvocateLoadingInitial,
+	});
+
+	const showRows = table.getFilteredRowModel().rows.length > 0;
+	const showNoResults =
+		!isAdvocateLoading && !isAdvocateLoadingInitial && advocates.length === 0;
+	const showLoading =
+		(isAdvocateLoading || isAdvocateLoadingInitial) && advocates.length === 0;
 
 	return (
 		<div className="w-full">
@@ -120,7 +131,7 @@ export function AdvocatesTable() {
 						))}
 					</TableHeader>
 					<TableBody>
-						{table.getRowModel().rows?.length ? (
+						{showRows &&
 							table.getRowModel().rows.map((row) => (
 								<TableRow
 									key={row.id}
@@ -134,13 +145,22 @@ export function AdvocatesTable() {
 										</TableCell>
 									))}
 								</TableRow>
-							))
-						) : (
+							))}
+						{showNoResults && (
 							<TableRow>
 								<TableCell
 									colSpan={columns.length}
 									className="h-24 text-center">
 									No results.
+								</TableCell>
+							</TableRow>
+						)}
+						{showLoading && (
+							<TableRow>
+								<TableCell
+									colSpan={columns.length}
+									className="h-24 text-center">
+									Loading...
 								</TableCell>
 							</TableRow>
 						)}
