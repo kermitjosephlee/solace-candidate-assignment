@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 import {
@@ -22,7 +22,6 @@ import {
 	DropdownMenuContent,
 	DropdownMenuTrigger,
 	Input,
-	Loading,
 	Table,
 	TableBody,
 	TableCell,
@@ -32,8 +31,6 @@ import {
 } from "@components";
 
 import { useAdvocates } from "@hooks";
-
-import { AdvocateType } from "@types";
 import { columns } from "./columns";
 
 export function AdvocatesTable() {
@@ -42,7 +39,7 @@ export function AdvocatesTable() {
 	const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = useState({});
 
-	const advocates = useAdvocates();
+	const { advocates, isAdvocateLoading } = useAdvocates();
 
 	const table = useReactTable({
 		data: advocates,
