@@ -2,28 +2,31 @@
 
 - I took the long weekend to work on this. I got into a groove and did not want to stop. In reality, at the 2-hour mark, I was wrapping up on the bugs and getting into analysis paralysis on how best to proceed.
 
-- I ended up using Shadcn and Tanstack table for the table element. I also installed fakerjs to bulk out the stubbed data.
+- I ended up using [Shadcn](https://ui.shadcn.com/) and [Tanstack Table](https://tanstack.com/table/latest) for the table element. I also installed [fakerjs](https://fakerjs.dev/) to bulk out the stubbed data.
 
 - I massaged the `db/seed/advocates` file to update the array of string for `specialties` into...
 
 ```
 specialties: {
   title: string,
-  subtitle: string,  // the parenthetical  
-  color: string (hex)  
+  subtitle: string,  // the parenthetical
+  color: string (hex)
 }
 ```
+
 This allowed for the subtitle tooltip hover and to keep the titles of the specialties easier to manage as pills.
 
 - I made the rows clickable to show a dialog screen. This was to show any further information not pertient for look at first-glance at the table.
 
 - Used Context and Hooks with AbortController and Loading states to handle fetching data.
 
-___
+![Screenshot Gif](./Screen%20Recording%202024-09-03%20at%2012.33.28%20PM.gif)
+
+---
 
 ## Future Considerations
 
-- Move search inputs and pagination to all be server-side. With larger datasets, it will bog down when the whole set is sent to the browser for filtering and searching. 
+- Move search inputs and pagination to all be server-side. With larger datasets, it will bog down when the whole set is sent to the browser for filtering and searching.
 
 - After searching, the table does not disable next pages after all the rows are shown. Definitely a bug worth chasing, but needed to stop.
 
