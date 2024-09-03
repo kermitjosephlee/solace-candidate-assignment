@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 
 import {
-	ColumnFiltersState,
 	flexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
@@ -61,12 +60,14 @@ export function AdvocatesTable() {
 		},
 	});
 
+	// What to show when loading, no results, or rows
 	const showRows = table.getFilteredRowModel().rows.length > 0;
 	const showNoResults =
 		!isAdvocateLoading && !isAdvocateLoadingInitial && advocates.length === 0;
 	const showLoading =
 		(isAdvocateLoading || isAdvocateLoadingInitial) && advocates.length === 0;
 
+	// Handlers
 	const onClickRow = (row: AdvocateType) => {
 		if (!!selectedRow && selectedRow.id === row.id) {
 			setSelectedRow(null);
