@@ -151,6 +151,7 @@ export function AdvocatesTable() {
 									<TableRow
 										key={row.id}
 										data-state={row.getIsSelected() && "selected"}
+										className="cursor-pointer"
 										onClick={() => onClickRow(row.original)}>
 										{row.getVisibleCells().map((cell) => (
 											<TableCell key={cell.id}>

@@ -26,8 +26,17 @@ export const columns: ColumnDef<AdvocateType>[] = [
 		header: "City",
 	},
 	{
-		accessorKey: "specialties",
+		id: "specialties",
 		header: "Specialties",
+		enableGlobalFilter: true,
+		accessorFn: (row) => {
+			return `${row.specialties
+				.map(
+					(specialty: SpecialtyType) =>
+						`${specialty.title} ${specialty.subtitle}`
+				)
+				.join(", ")}`;
+		},
 		cell: ({ row }) => {
 			return (
 				<div className=" flex flex-wrap gap-2">
