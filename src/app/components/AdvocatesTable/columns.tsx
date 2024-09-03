@@ -1,5 +1,7 @@
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, Column } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
 import {
+	Button,
 	Tooltip,
 	TooltipContent,
 	TooltipProvider,
@@ -8,22 +10,36 @@ import {
 
 import { AdvocateType, SpecialtyType } from "@types";
 
+const sortingButton = (
+	columnName: string,
+	column: Column<AdvocateType, unknown>
+) => {
+	return (
+		<Button
+			variant="ghost"
+			onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
+			{columnName}
+			<ArrowUpDown className="ml-2 h-4 w-4" />
+		</Button>
+	);
+};
+
 export const columns: ColumnDef<AdvocateType>[] = [
 	{
 		accessorKey: "lastName",
-		header: "Last Name",
+		header: ({ column }) => sortingButton("Last Name", column),
 	},
 	{
 		accessorKey: "firstName",
-		header: "First Name",
+		header: ({ column }) => sortingButton("First Name", column),
 	},
 	{
 		accessorKey: "degree",
-		header: "Degree",
+		header: ({ column }) => sortingButton("Degree", column),
 	},
 	{
 		accessorKey: "city",
-		header: "City",
+		header: ({ column }) => sortingButton("City", column),
 	},
 	{
 		id: "specialties",
@@ -73,7 +89,7 @@ export const columns: ColumnDef<AdvocateType>[] = [
 	},
 	{
 		accessorKey: "yearsOfExperience",
-		header: "Years of Experience",
+		header: ({ column }) => sortingButton("Years of Experience", column),
 		cell: ({ row }) => {
 			const { yearsOfExperience } = row.original;
 			return (

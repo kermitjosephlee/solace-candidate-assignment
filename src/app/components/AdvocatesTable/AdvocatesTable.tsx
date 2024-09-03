@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 
+
 import {
 	ColumnFiltersState,
 	flexRender,
@@ -42,12 +43,8 @@ export function AdvocatesTable() {
 	const [selectedRow, setSelectedRow] = useState<AdvocateType | null>(null);
 	const [inputValue, setInputValue] = useState<string>("");
 
-	const {
-		advocates,
-		isAdvocateLoading,
-		isAdvocateLoadingInitial,
-		advocatesLength,
-	} = useAdvocates();
+	const { advocates, isAdvocateLoading, isAdvocateLoadingInitial } =
+		useAdvocates();
 
 	const table = useReactTable({
 		data: advocates,
